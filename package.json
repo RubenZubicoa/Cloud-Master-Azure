@@ -7,7 +7,7 @@
     "start:dev": "vite --port 8080",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist -r git@github.com:RubenZubicoa/Cloud-Master.git",
     "type-check": "tsc --noEmit --preserveWatchOutput",
     "type-check:watch": "npm run type-check -- --watch"
   },
