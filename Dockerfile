@@ -17,8 +17,16 @@ FROM nginx:1.27-alpine
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
 
-ENV PORT=10000
+# App Service enruta al puerto 80. WEBSITES_PORT, si existe, tiene prioridad.
+ENV PORT=80
+EXPOSE 80
 
-EXPOSE 10000
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'set -e' \
+    'if [ -n "$WEBSITES_PORT" ]; then export PORT="$WEBSITES_PORT"; fi' \
+    'exec /docker-entrypoint.sh nginx -g "daemon off;"' \
+    > /azure-entrypoint.sh \
+    && chmod +x /azure-entrypoint.sh
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/azure-entrypoint.sh"]
